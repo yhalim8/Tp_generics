@@ -1,6 +1,8 @@
 package tp;
 
-public class Produit {
+import java.io.Serializable;
+
+public class Produit implements Serializable {
     long id;
     String nom;
     String marque;

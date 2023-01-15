@@ -1,12 +1,13 @@
 package tp;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class MetierProduitImpl implements IMetier<Produit>{
     List<Produit> list =new ArrayList<>();
-
+    File file = new File("liste_produits.dat");
     @Override
     public void add(Produit o) {
         Scanner input = new Scanner(System.in);
@@ -28,11 +29,13 @@ public class MetierProduitImpl implements IMetier<Produit>{
     }
 
     @Override
-    public List<Produit> getAll() {
-        for(Produit p : list){
-            System.out.println(p.toString());
-        };
-        return list;
+    public List<Produit> getAll() throws Exception {
+        FileInputStream fi = new FileInputStream(file);
+        ObjectInputStream os = new ObjectInputStream(fi);
+        List<Produit> p= (List<Produit>) os.readObject();
+        os.close();
+        fi.close();
+        return p;
     }
 
     @Override
@@ -45,9 +48,7 @@ public class MetierProduitImpl implements IMetier<Produit>{
                 break;
             }
             else {
-                System.out.println("produit n'est pas trouvé");
-
-            }
+                System.out.println("produit n'est pas trouvé");}
         }
         return a;
 
@@ -61,6 +62,16 @@ public class MetierProduitImpl implements IMetier<Produit>{
             else System.out.println("produit n'existe pas");
                 break;
         }
+    }
+
+    @Override
+    public void saveAll() throws Exception {
+        FileOutputStream fo = new FileOutputStream(file);
+        ObjectOutputStream os = new ObjectOutputStream(fo);
+        os.writeObject(list);
+        fo.close();
+        os.flush();
+        os.close();
     }
 
     @Override
